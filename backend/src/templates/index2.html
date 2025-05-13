@@ -30,7 +30,7 @@
             margin-right: 20px;
         }
         .main-content {
-            width: 70%;
+            width: 100%;
             float: right;
         }
         table {
@@ -67,15 +67,15 @@
         <h1>Система мониторинга</h1>
 
         <!-- Боковая панель -->
-        <div class="sidebar">
-            <p><strong>Ферма</strong></p>
-            <p>В систему подключено<br>{{ sensors_data|length }} датчиков</p>
-            <p>⚠ Превышение показателя у<br>датчика 2</p>
-            <p>⚠ Отсутствует подключение к<br>датчику 3</p>
-            <hr>
-            <p>{{ current_time }}</p>
-            <button class="export-button">Экспорт данных в облако</button>
-        </div>
+<!--        <div class="sidebar">-->
+<!--            <p><strong>Ферма</strong></p>-->
+<!--            <p>В систему подключено<br>{{ sensors_data|length }} датчиков</p>-->
+<!--            <p>⚠ Превышение показателя у<br>датчика 2</p>-->
+<!--            <p>⚠ Отсутствует подключение к<br>датчику 3</p>-->
+<!--            <hr>-->
+<!--            <p>{{ current_time }}</p>-->
+<!--            <button class="export-button">Экспорт данных в облако</button>-->
+<!--        </div>-->
 
         <!-- Основное содержимое -->
         <div class="main-content">
