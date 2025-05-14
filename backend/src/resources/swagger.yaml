@@ -1,22 +1,120 @@
 swagger: "2.0"
 info:
-  title: My API
-  version: 1.0.0
+  title: WiFiSystemHub API
+  description: API для системы мониторинга сигналов
+  version: "1.0"
+basePath: /
+schemes:
+  - http
+produces:
+  - application/json
 paths:
-  /data:
+  /:
     get:
-      summary: Пример endpoint
-      parameters:
-        - name: name
-          in: path
-          type: string
-          required: true
-          description: Имя пользователя
+      tags:
+        - UI
+      summary: Главная страница
+      description: Возвращает HTML страницу с данными датчиков
       responses:
         200:
-          description: Приветственное сообщение
+          description: HTML страница с данными
+          schema:
+            type: string
+            example: "<html>...</html>"
+
+  /operator:
+    get:
+      tags:
+        - UI
+      summary: Страница оператора
+      description: Заглушка для страницы оператора
+      responses:
+        200:
+          description: Текст заглушки
+          schema:
+            type: string
+            example: "Пока заглушка"
+
+  /data:
+    get:
+      tags:
+        - Data
+      summary: Сохранение или получение сигнала
+      description: Принимает данные сигнала и сохраняет их или возвращает существующий сигнал
+      parameters:
+        - name: data
+          in: query
+          type: string
+          required: true
+          description: JSON строка с данными сигнала
+          example: '{"id": "sensor1", "value": 25.5, "timestamp": "2023-01-01T12:00:00"}'
+      responses:
+        200:
+          description: Сохраненные или полученные данные сигнала
           schema:
             type: object
             properties:
-              message:
+              id:
                 type: string
+              value:
+                type: number
+              timestamp:
+                type: string
+
+  /view:
+    get:
+      tags:
+        - Data
+      summary: Получение текущих данных
+      description: Возвращает текущее состояние всех сигналов
+      responses:
+        200:
+          description: Массив сигналов
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: "Client_1_1"
+                group:
+                  type: string
+                  example: "Температура"
+                value:
+                  type: number
+                  example: 25.5
+                unit:
+                  type: string
+                  example: "°C"
+                status:
+                  type: string
+                  example: "🟢"
+
+  /history:
+    get:
+      tags:
+        - Data
+      summary: Получение истории сигналов
+      description: Возвращает историю сигналов для указанной группы
+      parameters:
+        - name: id
+          in: query
+          type: string
+          required: true
+          description: ID группы датчиков
+          example: "1"
+      responses:
+        200:
+          description: Массив исторических данных сигналов
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: string
+                value:
+                  type: number
+                timestamp:
+                  type: string

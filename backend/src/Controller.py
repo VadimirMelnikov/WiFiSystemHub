@@ -1,26 +1,16 @@
 from flask import Flask, request, render_template
-# from flasgger import Swagger
+from flasgger import Swagger
 import json
 
 from src.SignalService import SignalService
 
-app = Flask('WiFiSystemHub')
-
-# todo добавить сваггер
-# app.config['SWAGGER'] = {
-#     'title': 'WiFiSystemHub',
-#     'version': '1.0',
-#     'description': "Система мониторинга с вай-фай покрытием",
-#     'uiversion': 3
-# }
-# Swagger(app, template_file="swagger.yaml")
-
 # настройка приложения
 path_to_config = r"D:\Proggers\Python\WiFiSystemHub\backend\src\resources\appConf.json"
-
 with open(path_to_config, 'r', encoding='utf-8') as file:
     app_config = json.load(file)
 
+app = Flask('WiFiSystemHub')
+swagger = Swagger(app, template_file=r"D:\Proggers\Python\WiFiSystemHub\backend\src\resources\swagger.yaml")
 service = SignalService(app_config)
 
 
