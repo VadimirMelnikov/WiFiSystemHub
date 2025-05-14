@@ -91,3 +91,12 @@ class Repository:
                 )
         return data
 
+    def get_signals_by_group_id(self, group_id: int):
+        pattern = f"Client_{group_id}_"
+        with MongoClient(self.path) as client:
+            db = client[self.db]
+            collection = db[self.col]
+            cursor = collection.find({
+                "name": {"$regex": f"^{pattern}"}
+            })
+            return [{k: v for k, v in doc.items() if k != "_id"} for doc in cursor]

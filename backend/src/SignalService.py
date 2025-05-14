@@ -1,6 +1,5 @@
 import json
 from datetime import datetime, timedelta
-from functools import singledispatchmethod
 
 from src.Repository import Repository
 from src.Signal import Signal
@@ -43,7 +42,7 @@ class SignalService:
             group = self.sensor_config[signal.name[7]][0]
             unit = self.sensor_config[signal.name[7]][1]
             status = "active" \
-                if datetime.strptime(signal.time_stamp, "%d.%m.%Y %H:%M:%S") - datetime.now() < timedelta(seconds=10) \
+                if  datetime.now() - datetime.strptime(signal.time_stamp, "%d.%m.%Y %H:%M:%S") < timedelta(seconds=10) \
                 else "inactive"
             result.append(
                 {
@@ -51,7 +50,10 @@ class SignalService:
                     "group": group,
                     "value": signal.param,
                     "unit": unit,
-                    "status": get_status_icon(status)
+                    "status_icon": get_status_icon(status)
                 }
             )
         return result
+
+    def get_sinals_history_by_group_id(self, id):
+        return self.rep.get_signals_by_group_id(id)

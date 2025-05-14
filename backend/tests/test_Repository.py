@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 import pytest
 from pymongo import MongoClient
@@ -93,3 +94,13 @@ def test_get_all_last_signals(temp_repo):
     rep.save_signal_to_db(signal32)
     result = rep.get_all_last_signals()
     assert {signal12, signal22, signal32} == set(rep.get_all_last_signals())
+
+def test_get_singal_by_group_id(temp_repo):
+    rep = temp_repo
+    rep.save_signal_to_db(signal11)
+    rep.save_signal_to_db(signal12)
+    rep.save_signal_to_db(signal21)
+    rep.save_signal_to_db(signal22)
+    rep.save_signal_to_db(signal31)
+    rep.save_signal_to_db(signal32)
+    print(json.dumps(temp_repo.get_signals_by_group_id(1)))
