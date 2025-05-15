@@ -2,7 +2,6 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Система мониторинга</title>
     <style>
         body {
@@ -21,17 +20,6 @@
         h1 {
             text-align: center;
             margin-bottom: 20px;
-        }
-        .sidebar {
-            width: 25%;
-            float: left;
-            padding: 10px;
-            border: 1px solid #ddd;
-            margin-right: 20px;
-        }
-        .main-content {
-            width: 100%;
-            float: right;
         }
         table {
             width: 100%;
@@ -53,12 +41,9 @@
         .red { color: red; }
         .yellow { color: orange; }
         .gray { color: gray; }
-        .export-button {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #f2f2f2;
-            border: 1px solid #ddd;
-            cursor: pointer;
+
+        .filters {
+            margin-bottom: 15px;
         }
     </style>
 </head>
@@ -66,48 +51,254 @@
     <div class="container">
         <h1>Система мониторинга</h1>
 
-        <!-- Боковая панель -->
-<!--        <div class="sidebar">-->
-<!--            <p><strong>Ферма</strong></p>-->
-<!--            <p>В систему подключено<br>{{ sensors_data|length }} датчиков</p>-->
-<!--            <p>⚠ Превышение показателя у<br>датчика 2</p>-->
-<!--            <p>⚠ Отсутствует подключение к<br>датчику 3</p>-->
-<!--            <hr>-->
-<!--            <p>{{ current_time }}</p>-->
-<!--            <button class="export-button">Экспорт данных в облако</button>-->
-<!--        </div>-->
-
-        <!-- Основное содержимое -->
-        <div class="main-content">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Группа датчиков</th>
-                        <th>Значение</th>
-                        <th>Ед. измерения</th>
-                        <th>Состояние</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for sensor in sensors_data %}
-                    <tr>
-                        <td>{{ sensor.id }}</td>
-                        <td>{{ sensor.group }}</td>
-                        <td>{{ sensor.value }}</td>
-                        <td>{{ sensor.unit }}</td>
-                        <td>
-                            <span class="status-icon {{ sensor.status }}">
-                                {{ sensor.status_icon }}
-                            </span>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <!-- Фильтры -->
+        <div class="filters">
+            <label for="group-filter">Фильтр по группе:</label>
+            <select id="group-filter" onchange="applyFilter()">
+                <option value="">Все группы</option>
+            </select>
         </div>
 
-        <div style="clear: both;"></div>
+        <!-- Таблица -->
+        <table id="sensors-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Группа датчиков</th>
+                    <th>Значение</th>
+                    <th>Ед. измерения</th>
+                    <th>Состояние</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
     </div>
+
+    <script>
+        let allSensors = [];
+
+        async function fetchSensorData() {
+            try {
+                const response = await fetch('/view');
+                if (!response.ok) throw new Error("Ошибка загрузки данных");
+
+                allSensors = await response.json();
+                populateGroups(); // Заполняем список групп
+                applyFilter();     // Применяем текущий фильтр
+            } catch (error) {
+                console.error('Ошибка:', error);
+            }
+        }
+
+        function populateGroups() {
+            const groupSelect = document.getElementById('group-filter');
+            const groups = [...new Set(allSensors.map(s => s.group))];
+
+            groupSelect.innerHTML = '<option value="">Все группы</option>';
+            groups.forEach(group => {
+                const option = document.createElement('option');
+                option.value = group;
+                option.textContent = group;
+                groupSelect.appendChild(option);
+            });
+        }
+
+        function applyFilter() {
+            const selectedGroup = document.getElementById('group-filter').value;
+            const tbody = document.querySelector('#sensors-table tbody');
+            tbody.innerHTML = '';
+
+            const filtered = selectedGroup
+                ? allSensors.filter(s => s.group === selectedGroup)
+                : allSensors;
+
+            filtered.forEach(sensor => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${sensor.id}</td>
+                    <td>${sensor.group}</td>
+                    <td>${sensor.value.toFixed(2)}</td>
+                    <td>${sensor.unit}</td>
+                    <td>
+                        <span class="status-icon ${getStatusClass(sensor.status)}">
+                            ${getStatusIcon(sensor.status)}
+                        </span>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function getStatusClass(status) {
+            switch (status) {
+                case 'active': return 'green';
+                case 'inactive': return 'red';
+            }
+        }
+
+        function getStatusIcon(status) {
+            switch (status) {
+                case 'active': return '🟢';
+                case 'inactive': return '🔴';
+            }
+        }
+
+        // Первый вызов и обновление каждые 5 секунд
+        fetchSensorData();
+        setInterval(fetchSensorData, 5000);
+    </script>
 </body>
 </html>
+<!--<!DOCTYPE html>-->
+<!--<html lang="ru">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Система мониторинга</title>-->
+<!--    <style>-->
+<!--        body {-->
+<!--            font-family: Arial, sans-serif;-->
+<!--            margin: 0;-->
+<!--            padding: 0;-->
+<!--            background-color: #f4f4f4;-->
+<!--        }-->
+<!--        .container {-->
+<!--            max-width: 1200px;-->
+<!--            margin: 20px auto;-->
+<!--            padding: 20px;-->
+<!--            background-color: white;-->
+<!--            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);-->
+<!--        }-->
+<!--        h1 {-->
+<!--            text-align: center;-->
+<!--            margin-bottom: 20px;-->
+<!--        }-->
+<!--        .sidebar {-->
+<!--            width: 25%;-->
+<!--            float: left;-->
+<!--            padding: 10px;-->
+<!--            border: 1px solid #ddd;-->
+<!--            margin-right: 20px;-->
+<!--        }-->
+<!--        .main-content {-->
+<!--            width: 100%;-->
+<!--            float: right;-->
+<!--        }-->
+<!--        table {-->
+<!--            width: 100%;-->
+<!--            border-collapse: collapse;-->
+<!--        }-->
+<!--        th, td {-->
+<!--            border: 1px solid #ddd;-->
+<!--            padding: 8px;-->
+<!--            text-align: left;-->
+<!--        }-->
+<!--        th {-->
+<!--            background-color: #f2f2f2;-->
+<!--        }-->
+<!--        .status-icon {-->
+<!--            font-size: 20px;-->
+<!--            color: inherit;-->
+<!--        }-->
+<!--        .green { color: green; }-->
+<!--        .red { color: red; }-->
+<!--        .yellow { color: orange; }-->
+<!--        .gray { color: gray; }-->
+<!--        .export-button {-->
+<!--            margin-top: 20px;-->
+<!--            padding: 10px;-->
+<!--            background-color: #f2f2f2;-->
+<!--            border: 1px solid #ddd;-->
+<!--            cursor: pointer;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--    <div class="container">-->
+<!--        <h1>Система мониторинга</h1>-->
+
+<!--        &lt;!&ndash; Боковая панель &ndash;&gt;-->
+<!--&lt;!&ndash;        <div class="sidebar">&ndash;&gt;-->
+<!--&lt;!&ndash;            <p><strong>Ферма</strong></p>&ndash;&gt;-->
+<!--&lt;!&ndash;            <p>В систему подключено<br>{{ sensors_data|length }} датчиков</p>&ndash;&gt;-->
+<!--&lt;!&ndash;            <p>⚠ Превышение показателя у<br>датчика 2</p>&ndash;&gt;-->
+<!--&lt;!&ndash;            <p>⚠ Отсутствует подключение к<br>датчику 3</p>&ndash;&gt;-->
+<!--&lt;!&ndash;            <hr>&ndash;&gt;-->
+<!--&lt;!&ndash;            <p>{{ current_time }}</p>&ndash;&gt;-->
+<!--&lt;!&ndash;            <button class="export-button">Экспорт данных в облако</button>&ndash;&gt;-->
+<!--&lt;!&ndash;        </div>&ndash;&gt;-->
+
+<!--        &lt;!&ndash; Основное содержимое &ndash;&gt;-->
+<!--        <div class="main-content">-->
+<!--            <table>-->
+<!--                <thead>-->
+<!--                    <tr>-->
+<!--                        <th>ID</th>-->
+<!--                        <th>Группа датчиков</th>-->
+<!--                        <th>Значение</th>-->
+<!--                        <th>Ед. измерения</th>-->
+<!--                        <th>Состояние</th>-->
+<!--                    </tr>-->
+<!--                </thead>-->
+<!--                <tbody>-->
+<!--&lt;!&ndash;                    {% for sensor in sensors_data %}&ndash;&gt;-->
+<!--&lt;!&ndash;                    <tr>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <td>{{ sensor.id }}</td>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <td>{{ sensor.group }}</td>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <td>{{ sensor.value }}</td>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <td>{{ sensor.unit }}</td>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <td>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <span class="status-icon {{ sensor.status }}">&ndash;&gt;-->
+<!--&lt;!&ndash;                                {{ sensor.status_icon }}&ndash;&gt;-->
+<!--&lt;!&ndash;                            </span>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </td>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </tr>&ndash;&gt;-->
+<!--&lt;!&ndash;                    {% endfor %}&ndash;&gt;-->
+<!--                </tbody>-->
+<!--            </table>-->
+<!--        </div>-->
+<!--<script>-->
+<!--    async function fetchSensorData() {-->
+<!--        try {-->
+<!--            const response = await fetch('/view');-->
+<!--            if (!response.ok) throw new Error("Ошибка загрузки данных");-->
+
+<!--            const sensors = await response.json();-->
+<!--            updateTable(sensors);-->
+<!--        } catch (error) {-->
+<!--            console.error('Ошибка:', error);-->
+<!--        }-->
+<!--    }-->
+
+<!--    function updateTable(sensors) {-->
+<!--        const tbody = document.querySelector('#sensors-table tbody');-->
+<!--        tbody.innerHTML = ''; // Очистка предыдущих данных-->
+
+<!--        sensors.forEach(sensor => {-->
+<!--            const row = document.createElement('tr');-->
+
+<!--            row.innerHTML = `-->
+<!--                <td>${sensor.id}</td>-->
+<!--                <td>${sensor.group}</td>-->
+<!--                <td>${sensor.value}</td>-->
+<!--                <td>${sensor.unit}</td>-->
+<!--                <td>-->
+<!--                    <span class="status-icon ${getStatusClass(sensor.status)}">-->
+<!--                        ${getStatusIcon(sensor.status)}-->
+<!--                    </span>-->
+<!--                </td>-->
+<!--            `;-->
+
+<!--            tbody.appendChild(row);-->
+<!--            });-->
+<!--        }-->
+<!--     // Первый вызов и установка таймера-->
+<!--     fetchSensorData();-->
+<!--     setInterval(fetchSensorData, 5000); // Обновление каждые 5 секунд-->
+<!--</script>-->
+
+
+<!--        <div style="clear: both;"></div>-->
+<!--    </div>-->
+<!--</body>-->
+<!--</html>-->

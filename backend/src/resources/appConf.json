@@ -2,5 +2,5 @@
     "url": "mongodb://localhost:27017/",
     "db" : "esp_database",
     "collection": "esp_collection",
-    "path to config": "D:\\Proggers\\Python\\WiFiSystemHub\\backend\\src\\resources\\sensorConf.json"
+    "path to config": "C:/Users/HONOR/PycharmProjects/WIFACTORY/backend/src/resources/sensorConf.json"
 }
