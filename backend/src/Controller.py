@@ -1,16 +1,17 @@
 from flask import Flask, request, render_template
 from flasgger import Swagger
 import json
-
+import os
 from src.SignalService import SignalService
 
 # настройка приложения
-path_to_config = r"D:\Proggers\Python\WiFiSystemHub\backend\src\resources\appConf.json"
+path_to_config = os.path.join(os.path.dirname(__file__), 'resources', 'appConf.json')
 with open(path_to_config, 'r', encoding='utf-8') as file:
     app_config = json.load(file)
 
-app = Flask('WiFiSystemHub')
-swagger = Swagger(app, template_file=r"D:\Proggers\Python\WiFiSystemHub\backend\src\resources\swagger.yaml")
+path_to_templates = os.path.join(os.path.dirname(__file__), 'templates')
+app = Flask('WiFiSystemHub', template_folder=path_to_templates)
+swagger = Swagger(app, template_file=os.path.join(os.path.dirname(__file__), 'resources', 'swagger.yaml'))
 service = SignalService(app_config)
 
 

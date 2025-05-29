@@ -1,6 +1,6 @@
 import json
 from datetime import datetime, timedelta
-
+import os
 from src.Repository import Repository
 from src.Signal import Signal
 
@@ -19,7 +19,8 @@ class SignalService:
                 config["db"],
                 config["collection"])
 
-        with open(config["path to config"], 'r', encoding='utf-8') as file:
+        path_to_sensor_config = os.path.join(os.path.dirname(__file__), 'resources', 'sensorConf.json')
+        with open(path_to_sensor_config, 'r', encoding='utf-8') as file:
             self.sensor_config = json.load(file)
 
     def save_or_get_signal(self, data):
