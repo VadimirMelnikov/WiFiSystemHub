@@ -3,15 +3,17 @@ from flask import Flask, request, render_template, jsonify
 import json
 import random
 import time
+import os
 
 from src.SignalService import SignalService
 
 # настройка приложения
-path_to_config = r"C:\Users\HONOR\PycharmProjects\WIFACTORY\backend\src\resources\appConf.json"
+path_to_config = os.path.join(os.path.dirname(__file__), 'resources', 'appConf.json')
 with open(path_to_config, 'r', encoding='utf-8') as file:
     app_config = json.load(file)
 
-app = Flask('WiFiSystemHub')
+path_to_templates = os.path.join(os.path.dirname(__file__), 'templates')
+app = Flask('WiFiSystemHub', template_folder=path_to_templates)
 #swagger = Swagger(app, template_file=r"D:\Proggers\Python\WiFiSystemHub\backend\src\resources\swagger.yaml")
 service = SignalService(app_config)
 
@@ -28,6 +30,7 @@ def get_random_value(group):
         return round(950 + random.uniform(0, 100), 1)  # мм рт.ст.
     else:
         return round(random.uniform(0, 100), 1)
+
 # Определение статуса датчика на основе значения
 def get_status(value, group):
     if group == 'Температура':
@@ -47,6 +50,7 @@ def get_status(value, group):
             return 'active'
     else:
         return 'active' if random.random() > 0.2 else 'inactive'
+
 def get_unit(group):
     return {
         'Температура': '°C',
@@ -54,15 +58,14 @@ def get_unit(group):
         'Давление': 'мм рт.ст.'
     }.get(group, '')
 #---------------------
+
 @app.route("/")
 def main_page():
-    return render_template('index2.html',
-                           sensors_data=service.get_signals_view())
+    return render_template('operatorPage.html')
 
-@app.route("/operator")
+@app.route("/graph")
 def operator_page():
-    # todo добавить страницу
-    return "Пока заглушка"
+    return render_template('graphPage.html')
 
 @app.route("/data", methods=['GET'])
 def send_signal():
@@ -71,23 +74,23 @@ def send_signal():
 
 @app.route("/view", methods=['GET'])
 def get_view():
-    #---------------------заглушка типо
-    sensors_data = []
-    for i, group in enumerate(GROUPS):
-        value = get_random_value(group)
-        status = get_status(value, group)
-        unit = get_unit(group)
-
-        sensors_data.append({
-            'id': i + 1,
-            'group': group,
-            'value': value,
-            'unit': unit,
-            'status': status
-        })
-    return jsonify(sensors_data)
+    # #---------------------заглушка типо
+    # sensors_data = []
+    # for i, group in enumerate(GROUPS):
+    #     value = get_random_value(group)
+    #     status = get_status(value, group)
+    #     unit = get_unit(group)
+    #
+    #     sensors_data.append({
+    #         'id': i + 1,
+    #         'group': group,
+    #         'value': value,
+    #         'unit': unit,
+    #         'status': status
+    #     })
+    # return json.dumps(sensors_data, ensure_ascii=False)
     #----------------
-    #return json.dumps(service.get_signals_view(), ensure_ascii=False)
+    return json.dumps(service.get_signals_view(), ensure_ascii=False)
 
 @app.route("/history", methods=['GET'])
 def get_history():

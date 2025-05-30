@@ -56,6 +56,9 @@
             <label for="group-filter">Фильтр по группе:</label>
             <select id="group-filter" onchange="applyFilter()">
                 <option value="">Все группы</option>
+                <option value="Температура">Температура</option>
+                <option value="Давление">Давление</option>
+                <option value="Влажность">Влажность</option>
             </select>
         </div>
 
@@ -74,81 +77,11 @@
         </table>
     </div>
 
-    <script>
-        let allSensors = [];
-
-        async function fetchSensorData() {
-            try {
-                const response = await fetch('/view');
-                if (!response.ok) throw new Error("Ошибка загрузки данных");
-
-                allSensors = await response.json();
-                populateGroups(); // Заполняем список групп
-                applyFilter();     // Применяем текущий фильтр
-            } catch (error) {
-                console.error('Ошибка:', error);
-            }
-        }
-
-        function populateGroups() {
-            const groupSelect = document.getElementById('group-filter');
-            const groups = [...new Set(allSensors.map(s => s.group))];
-
-            groupSelect.innerHTML = '<option value="">Все группы</option>';
-            groups.forEach(group => {
-                const option = document.createElement('option');
-                option.value = group;
-                option.textContent = group;
-                groupSelect.appendChild(option);
-            });
-        }
-
-        function applyFilter() {
-            const selectedGroup = document.getElementById('group-filter').value;
-            const tbody = document.querySelector('#sensors-table tbody');
-            tbody.innerHTML = '';
-
-            const filtered = selectedGroup
-                ? allSensors.filter(s => s.group === selectedGroup)
-                : allSensors;
-
-            filtered.forEach(sensor => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${sensor.id}</td>
-                    <td>${sensor.group}</td>
-                    <td>${sensor.value.toFixed(2)}</td>
-                    <td>${sensor.unit}</td>
-                    <td>
-                        <span class="status-icon ${getStatusClass(sensor.status)}">
-                            ${getStatusIcon(sensor.status)}
-                        </span>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        function getStatusClass(status) {
-            switch (status) {
-                case 'active': return 'green';
-                case 'inactive': return 'red';
-            }
-        }
-
-        function getStatusIcon(status) {
-            switch (status) {
-                case 'active': return '🟢';
-                case 'inactive': return '🔴';
-            }
-        }
-
-        // Первый вызов и обновление каждые 5 секунд
-        fetchSensorData();
-        setInterval(fetchSensorData, 5000);
-    </script>
+    <script src="{{ url_for('static', filename='js/operatorApp.js') }}"></script>
 </body>
 </html>
+
+
 <!--<!DOCTYPE html>-->
 <!--<html lang="ru">-->
 <!--<head>-->
