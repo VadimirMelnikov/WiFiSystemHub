@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>График параметров датчиков</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/graphStyles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>График параметров датчиков</h1>
+        <div class="chart-container">
+            <canvas id="sensorChart"></canvas>
+            <div class="message-panel">
+                <h2>События</h2>
+                <ul class="message-list">
+                    <li>14:23:33 23.02.2025 Сработала защита по превышению давления</li>
+                    <li>14:23:33 23.02.2025 Превышение допустимой температуры на датчике 4</li>
+                    <li>14:23:33 23.02.2025 Сработала защита по превышению давления</li>
+                    <li>14:23:33 23.02.2025 Превышение допустимой температуры на датчике 4</li>
+                    <li>14:23:33 23.02.2025 Сработала защита по превышению давления</li>
+                    <li>14:23:33 23.02.2025 Превышение допустимой температуры на датчике 4</li>
+                    <li>14:23:33 23.02.2025 Сработала защита по превышению давления</li>
+                    <li>14:23:33 23.02.2025 Превышение допустимой температуры на датчике 4</li>
+                </ul>
+            </div>
+        </div>
+        <div class="controls">
+            <label for="groupSelect">Выберите ID группы:</label>
+            <select id="groupSelect" onchange="fetchData()">
+                <option value="" disabled selected>Выберите группу</option>
+                <option value="1">Влажность</option>
+                <option value="2">Уровень</option>
+                <option value="3">Давление</option>
+                <option value="4">Температура</option>
+                <!-- Добавьте другие ID групп, если нужно -->
+            </select>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="{{ url_for('static', filename='js/graphApp.js') }}"></script>
+</body>
+</html>

@@ -76,20 +76,10 @@ class Repository:
 
 
     def get_all_signals(self):
-        data = []
         with MongoClient(self.path) as client:
             db = client[self.db]
             collection = db[self.col]
-            for json in collection.find():
-                json.pop('_id')
-                data.append(
-                    Signal(
-                        name=json["name"],
-                        param=json["param"],
-                        time_stamp=json["time_stamp"]
-                    )
-                )
-        return data
+            return [{k: v for k, v in doc.items() if k != "_id"} for doc in collection.find()]
 
     def get_signals_by_group_id(self, group_id: int):
         pattern = f"Client_{group_id}_"
