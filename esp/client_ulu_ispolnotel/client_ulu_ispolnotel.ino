@@ -3,6 +3,7 @@
 #include <WiFiClient.h>
 #include <ESP8266WiFiMulti.h>
 #include <ArduinoJson.h>
+#include <math.h>
 
 
 ESP8266WiFiMulti WiFiMulti; // объект, позволяющий устанавливать соединения сразу с несколькими модулями.
@@ -12,17 +13,19 @@ ESP8266WiFiMulti WiFiMulti; // объект, позволяющий устана
 String data;  // строка, в которую запишется ответ сервера
 
 //Подключение
-const char* ssid = "iPhone (Савелий)"; // Имя и пароль от подсети, создаваемой сервером (другой ESP-01)
-const char* password = "89373786317"; 
-String serverName = "http://172.20.10.14:8000";   // IP-адресс сервера
+// const char* ssid = "iPhone (Савелий)"; // Имя и пароль от подсети, создаваемой сервером (другой ESP-01)
+// const char* password = "89373786317"; 
+const char* ssid = "Вадим's Galaxy A53 5G"; // Имя и пароль от подсети, создаваемой сервером (другой ESP-01)
+const char* password = "14881488"; 
+String serverName = "http://192.168.137.117:5000";   // IP-адресс сервера
 
 //Режимы работы, имя, кол-во датчиков 
 unsigned long previousMillis = 0;
-const long interval = 7000; // временной интервал между каждым запросом
+const long interval = 1000; // временной интервал между каждым запросом
 int cnt = 0;
-const String name = "Client_2";
-const String mode = "Ispol";
-int Par[5]; 
+const String name = "Client_1_1";
+const String mode = "Sensor";
+int Par[1]; 
 //////////////////////////////////////////////////////////////////
 
 
@@ -51,17 +54,18 @@ void loop() {
 
     //Sensor give data
     for(int i = 0; i < sizeof(Par) / sizeof(Par[0]); i++){
-      if (cnt == 100) {cnt = 0;}
-      Par[i] = cnt;
+      if (cnt == 1000) {cnt = 0;}
+      Par[i] = sin(cnt)*50;
       cnt = cnt + 1;
     }
     //String Data_to_Send = genJson(Par, sizeof(Par)); // строка для отправки в сервер
     String Data_to_Send = buildJson(name, mode, Par, sizeof(Par)/sizeof(Par[0]));
+    Serial.println("data:" + Data_to_Send);    // Вывод ответов в паралелльный порт
 
 
     if ((WiFiMulti.run() == WL_CONNECTED)) { // провека на подключение к серверу
       data = httpGETRequest(serverName+"/data?data=" + Data_to_Send);  // Ответ на посылаемые данные .
-      Serial.println("data:" + data);    // Вывод ответов в паралелльный порт
+      Serial.println("response:" + data);    // Вывод ответов в паралелльный порт
       previousMillis = currentMillis;
 
     //Обработка полученных данных
