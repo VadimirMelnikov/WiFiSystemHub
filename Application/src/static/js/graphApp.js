@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Запуск периодического обновления, если еще не запущено
             if (!updateInterval) {
-                updateInterval = setInterval(fetchData, 5000); // Обновление каждые 5 секунд
+                updateInterval = setInterval(fetchData, 1000); // Обновление каждые 5 секунд
             }
         } catch (error) {
             console.error('Ошибка:', error);

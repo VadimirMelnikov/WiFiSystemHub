@@ -27,14 +27,15 @@ th, td {
 th {
     background-color: #f2f2f2;
 }
+
 .status-icon {
     font-size: 20px;
     color: inherit;
 }
 .green { color: green; }
-.red { color: red; }
-.yellow { color: orange; }
-.gray { color: gray; }
+.yellow { color: orange; } /* Оранжевый для inactive */
+.red { color: red; } /* Красный для out_of_range */
+.gray { color: gray; } /* Для неизвестных статусов */
 .filters {
     margin-bottom: 15px;
 }

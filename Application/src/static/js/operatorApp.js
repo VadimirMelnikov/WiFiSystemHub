@@ -41,18 +41,30 @@ function applyFilter() {
 
 function getStatusClass(status) {
     switch (status) {
-        case 'active': return 'green';
-        case 'inactive': return 'red';
+        case 'active':
+            return 'green';
+        case 'inactive':
+            return 'yellow'; // Оранжевый цвет
+        case 'out_of_range':
+            return 'red';
+        default:
+            return 'gray'; // Для неизвестных статусов
     }
 }
 
 function getStatusIcon(status) {
     switch (status) {
-        case 'active': return '🟢';
-        case 'inactive': return '🔴';
+        case 'active':
+            return '🟢';
+        case 'inactive':
+            return '⚠';
+        case 'out_of_range':
+            return '❗';
+        default:
+            return '⚫'; // Нейтральная иконка для неизвестных статусов
     }
 }
 
-// Первый вызов и обновление каждые 5 секунд
+// Первый вызов и обновление каждые 1 секунд
 fetchSensorData();
-setInterval(fetchSensorData, 5000);
+setInterval(fetchSensorData, 1000);
