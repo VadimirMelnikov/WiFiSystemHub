@@ -1,0 +1,5 @@
+Application/backend/.idea
+Application/backend/.venv
+Application/frontend/node_modules
+Application/frontend/package-lock.json
+__pycache__

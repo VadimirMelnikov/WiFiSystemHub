@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  emqx:
+    image: emqx/emqx:5.8.1
+    container_name: emqx
+    ports:
+      - "1883:1883"   # MQTT порт
+      #- "8081:8081"   # WebSocket порт
+      - "18083:18083" # Web Dashboard
+    environment:
+      - EMQX_NAME=emqx
+      - EMQX_ADMIN_PASSWORD=admin123
+    volumes:
+      - emqx_data:/opt/emqx/data
+      - emqx_log:/opt/emqx/log
+    networks:
+      - mqtt-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:18083"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  mongo:
+    image: mongo:latest
+    restart: always
+    container_name: mongo
+    ports:
+        - 27017:27017
+    # environment:
+    #    MONGO_INITDB_ROOT_USERNAME: admin
+    #    MONGO_INITDB_ROOT_PASSWORD: my_password
+    volumes:
+        - mongo_data:/data/db
+
+  mongo-express:
+    image: mongo-express:latest
+    restart: always
+    container_name: mongo-express
+    ports:
+        - 8081:8081
+    # environment:
+    #     ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+    #     ME_CONFIG_MONGODB_ADMINPASSWORD: my_password
+    #     ME_CONFIG_MONGODB_URL: mongodb://admin:my_password@mongo:27017/
+
+volumes:
+  mongo_data:
+  emqx_data:
+  emqx_log:
+
+networks:
+  mqtt-net:
+    driver: bridge

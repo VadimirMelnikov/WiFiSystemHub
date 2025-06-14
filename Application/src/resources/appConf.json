@@ -1,6 +1,0 @@
-{
-    "url": "mongodb://mongo:27017/",
-    "db" : "esp_database",
-    "collection": "esp_collection"
-}
-

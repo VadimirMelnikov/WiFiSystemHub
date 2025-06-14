@@ -1,0 +1,1 @@
+export const filteredSensors = ['sensor1'];
