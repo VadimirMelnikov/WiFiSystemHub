@@ -12,6 +12,10 @@ class DeviceService:
                 config["db"],
                 config["collection"])
 
+        path_to_sensor_config = os.path.join(os.path.dirname(__file__), '..', 'resources', 'mqttSubs.json')
+        with open(path_to_sensor_config, 'r', encoding='utf-8') as file:
+            self.mqtt_subs = json.load(file)
+
         path_to_sensor_config = os.path.join(os.path.dirname(__file__), '..', 'resources', 'groupUnits.json')
         with open(path_to_sensor_config, 'r', encoding='utf-8') as file:
             self.sensor_config = json.load(file)
@@ -45,8 +49,8 @@ class DeviceService:
     def get_actuators(self):
         result = list()
         response = requests.get(
-            "http://localhost:18083/api/v5/subscriptions",
-            auth=("8335fa56d487562d", "ngF2YTKW3rdoN9C4uqbxpl80DZf9A4FcP9AOoVyNQWibFK"),
+            self.mqtt_subs["url"],
+            auth=(self.mqtt_subs["auth_token"], self.mqtt_subs["auth_key"]),
             timeout=5
         )
         for node in response.json()["data"]:
