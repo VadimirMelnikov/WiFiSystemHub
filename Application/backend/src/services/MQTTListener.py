@@ -54,8 +54,10 @@ def main():
 
     # Подключение к брокеру
     try:
+        mqtt_client.reconnect_delay_set(min_delay=1, max_delay=120)
         mqtt_client.connect(mqtt_config['host'], int(mqtt_config['port']), 60)
         print(f"Connecting to MQTT Broker at {mqtt_config['host']}:{mqtt_config['port']}")
+        mqtt_client.loop_forever()
     except Exception as e:
         print(f"Failed to connect to MQTT Broker: {e}")
         exit(1)
