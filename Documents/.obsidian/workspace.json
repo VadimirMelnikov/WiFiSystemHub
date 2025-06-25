@@ -1,0 +1,179 @@
+{
+  "main": {
+    "id": "e91049e5ff2b00d3",
+    "type": "split",
+    "children": [
+      {
+        "id": "ab66ef6e0b820541",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "8e6f33735536b59d",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "WiFactory - ТЗ на разработку системы.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "WiFactory - ТЗ на разработку системы"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "9a67ae2c70b5bfd7",
+    "type": "split",
+    "children": [
+      {
+        "id": "dae7837d24bed9fe",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1f5f965be3d34f3e",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "f80f4a53937693ce",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "17f1e08f79e953ae",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200,
+    "collapsed": true
+  },
+  "right": {
+    "id": "df32e66148e57064",
+    "type": "split",
+    "children": [
+      {
+        "id": "af04ba276002e625",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "d364a425871e7124",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "WiFactory - ТЗ на разработку системы.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for WiFactory - ТЗ на разработку системы"
+            }
+          },
+          {
+            "id": "7e9de16251738bb9",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "WiFactory - ТЗ на разработку системы.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from WiFactory - ТЗ на разработку системы"
+            }
+          },
+          {
+            "id": "1bcb2621ba19cdca",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "25622e4c9740437c",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "WiFactory - ТЗ на разработку системы.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of WiFactory - ТЗ на разработку системы"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "8e6f33735536b59d",
+  "lastOpenFiles": [
+    "WiFactory - схема прототипа 1.svg",
+    "Untitled.md",
+    "WiFactory - схема прототипа.svg",
+    "WiFactory - ТЗ на разработку системы.md"
+  ]
+}
